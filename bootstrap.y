@@ -10,7 +10,7 @@
 %}
 
 %union {int num; char *id;}
-%token <id> ENTRADA SAIDA FIM ENQUANTO FACA INC ZERA SE ENTAO SENAO DEC
+%token <id> ENTRADA SAIDA FIM ENQUANTO FACA INC ZERA SE ENTAO SENAO DEC VEZES
 %token <id> ID
 %type <id> cmd cmds varlist
 
@@ -83,6 +83,14 @@ cmd:
 	strcat(result, "ZERA(I)\nFIM\nZERA(J)\nINC(J)\nI = A\nENQUANTO I FACA\nZERA(J)\nZERA(I)\nFIM\nENQUANTO J FACA\n");
 	strcat(result, $6);
 	strcat(result, "ZERA(J)\nFIM\n");
+	$$ = result;
+  }
+  | FACA ID VEZES cmds FIM{
+	char* result = malloc(33 + strlen($4));
+	strcpy(result, "I = A\nENQUANTO I FACA\n");
+	strcat(result, $4);
+	strcat(result, "DEC(I)\n");
+	strcat(result, "FIM\n");
 	$$ = result;
   }
   | ID '=' ID {

@@ -15,6 +15,7 @@ SAIDA       { yylval.id=strdup(yytext); return (SAIDA);}
 FIM         { yylval.id=strdup(yytext); return (FIM);}
 ENQUANTO    { yylval.id=strdup(yytext); return (ENQUANTO);}
 FACA        { yylval.id=strdup(yytext); return (FACA);}
+VEZES		{ yylval.id=strdup(yytext); return (VEZES);}
 SE			{ yylval.id=strdup(yytext); return (SE);}
 ENTAO		{ yylval.id=strdup(yytext); return (ENTAO);}
 SENAO		{ yylval.id=strdup(yytext); return (SENAO);}
