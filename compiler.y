@@ -3,8 +3,6 @@
   #include <string.h>
   #include <stdlib.h>
 
-  int tabsym[26];
-
   int yylex();
   void yyerror();
   extern int line_n;
@@ -20,8 +18,6 @@
 
 program:
   ENTRADA varlist SAIDA varlist cmds FIM {
-    printf("Codigo em C:\n%s%s\n", $2, $5);
-
     // writing result code onto output c file
     FILE *out = fopen("out.c", "w");
     if (out == NULL) exit(1); // error opening file
@@ -31,7 +27,8 @@ program:
     strcat(code, "\n}");
     fprintf(out, "%s", code);
     fclose(out);
-    system("gcc -o out out.c");
+
+    printf("Codigo C gerado com sucesso - resultado em 'out.c'\n");
 
     exit(0);
   }
