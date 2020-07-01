@@ -1,7 +1,7 @@
 %{
   #include <stdio.h>
   #include <string.h>
-  #include "camila.tab.h"
+  #include "compiler.tab.h"
 
   int line_n = 1;
 %}
