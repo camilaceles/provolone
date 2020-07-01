@@ -10,7 +10,7 @@
 %}
 
 %union {int num; char *id;}
-%token <id> ENTRADA SAIDA FIM ENQUANTO FACA INC ZERA
+%token <id> ENTRADA SAIDA FIM ENQUANTO FACA INC ZERA SE ENTAO SENAO DEC
 %token <id> ID
 %type <id> cmd cmds varlist
 
@@ -38,9 +38,14 @@ program:
 ;
 
 varlist:
-  ID 
+  ID {
+	char* result = malloc(strlen($1 + 4));
+	strcpy(result, $1);
+ 	strcat(result, " I J");
+	$$ = result;
+  }
   | varlist ID {
-	char* result = malloc(strlen($1) + strlen($2) + 1);
+	char* result = malloc(strlen($1) + strlen($2) + 5);
 	strcpy(result, $1); strcat(result, " "); strcat(result, $2);
     $$ = result;
   }
@@ -64,9 +69,29 @@ cmd:
 	strcat(result, $5); strcat(result, "\n");
     $$ = result;
   }
+  | SE ID ENTAO cmds FIM {
+  	char* result = malloc(34 + strlen($4));
+	strcpy(result, "I = A\nENQUANTO I FACA\n");
+	strcat(result, $4);
+	strcat(result, "ZERA(I)\nFIM\n");
+	$$ = result;
+  }
+  | SE ID ENTAO cmds SENAO cmds FIM {
+  	char* result = malloc(109 + strlen($4) + strlen($6));
+	strcpy(result, "I = A\nENQUANTO I FACA\n");
+	strcat(result, $4);
+	strcat(result, "ZERA(I)\nFIM\nZERA(J)\nINC(J)\nI = A\nENQUANTO I FACA\nZERA(J)\nZERA(I)\nFIM\nENQUANTO J FACA\n");
+	strcat(result, $6);
+	strcat(result, "ZERA(J)\nFIM\n");
+	$$ = result;
+  }
   | ID '=' ID {
     char* result = malloc(strlen($1) + strlen($3) + 4); strcpy(result, $1);
     strcat(result, " = "); strcat(result, $3); strcat(result, "\n");$$ = result;
+  }
+  | DEC '(' ID ')' {
+    char* result = malloc(strlen($1) + strlen($3) + 3); strcpy(result, $1); strcat(result, "(");
+    strcat(result, $3); strcat(result, ")\n"); $$ = result;
   }
   | INC '(' ID ')' {
     char* result = malloc(strlen($1) + strlen($3) + 3); strcpy(result, $1); strcat(result, "(");

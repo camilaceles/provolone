@@ -24,7 +24,7 @@ program:
     char* code = malloc(strlen($2) + strlen($5) + 20);
     strcpy(code, "int main() {\n");
     strcat(code, $2); strcat(code, $5);
-    strcat(code, "\n}");
+    strcat(code, "}");
     fprintf(out, "%s", code);
     fclose(out);
 
@@ -70,6 +70,10 @@ cmd:
   | INC '(' ID ')' {
     char* result = malloc(strlen($3) + 4); strcpy(result, $3);
     strcat(result, "++;\n"); $$ = result;
+  }
+  | DEC '(' ID ')' {
+    char* result = malloc(strlen($3) + 4); strcpy(result, $3);
+    strcat(result, "--;\n"); $$ = result;
   }
   | ZERA '(' ID ')' {
     char* result = malloc(strlen($3) + 6); strcpy(result, $3);
