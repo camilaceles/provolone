@@ -21,6 +21,18 @@
 program:
   ENTRADA varlist SAIDA varlist cmds FIM {
     printf("Codigo em C:\n%s%s\n", $2, $5);
+
+    // writing result code onto output c file
+    FILE *out = fopen("out.c", "w");
+    if (out == NULL) exit(1); // error opening file
+    char* code = malloc(strlen($2) + strlen($5) + 20);
+    strcpy(code, "int main() {\n");
+    strcat(code, $2); strcat(code, $5);
+    strcat(code, "\n}");
+    fprintf(out, "%s", code);
+    fclose(out);
+    system("gcc -o out out.c");
+
     exit(0);
   }
 ;
