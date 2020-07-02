@@ -79,13 +79,13 @@ cmd:
   	char* result = malloc(34 + strlen($4));
     strcpy(result, "I = ");
     strcat(result, $2);
-    strcat("\nENQUANTO I FACA\n");
+    strcat(result, "\nENQUANTO I FACA\n");
     strcat(result, $4);
     strcat(result, "ZERA(I)\nFIM\n");
     $$ = result;
   }
   | SE ID ENTAO cmds SENAO cmds FIM {
-  	char* result = malloc(109 + strlen($4) + strlen($6));
+  	char* result = malloc(115 + strlen($4) + strlen($6));
     strcpy(result, "I = ");
     strcat(result, $2);
     strcat(result, "\nENQUANTO I FACA\n");
