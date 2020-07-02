@@ -77,23 +77,31 @@ cmd:
   }
   | SE ID ENTAO cmds FIM {
   	char* result = malloc(34 + strlen($4));
-    strcpy(result, "I = A\nENQUANTO I FACA\n");
+    strcpy(result, "I = ");
+    strcat(result, $2);
+    strcat("\nENQUANTO I FACA\n");
     strcat(result, $4);
     strcat(result, "ZERA(I)\nFIM\n");
     $$ = result;
   }
   | SE ID ENTAO cmds SENAO cmds FIM {
   	char* result = malloc(109 + strlen($4) + strlen($6));
-    strcpy(result, "I = A\nENQUANTO I FACA\n");
+    strcpy(result, "I = ");
+    strcat(result, $2);
+    strcat(result, "\nENQUANTO I FACA\n");
     strcat(result, $4);
-    strcat(result, "ZERA(I)\nFIM\nZERA(J)\nINC(J)\nI = A\nENQUANTO I FACA\nZERA(J)\nZERA(I)\nFIM\nENQUANTO J FACA\n");
+    strcat(result, "ZERA(I)\nFIM\nZERA(J)\nINC(J)\nI = ");
+    strcat(result, $2);
+    strcat(result, "\nENQUANTO I FACA\nZERA(J)\nZERA(I)\nFIM\nENQUANTO J FACA\n");
     strcat(result, $6);
     strcat(result, "ZERA(J)\nFIM\n");
     $$ = result;
   }
   | FACA ID VEZES cmds FIM{
     char* result = malloc(33 + strlen($4));
-    strcpy(result, "I = A\nENQUANTO I FACA\n");
+    strcpy(result, "I = ");
+    strcat(result, $2);
+    strcat(result, "\nENQUANTO I FACA\n");
     strcat(result, $4);
     strcat(result, "DEC(I)\n");
     strcat(result, "FIM\n");
