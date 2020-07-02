@@ -9,10 +9,10 @@
   extern FILE *yyin;
 %}
 
-%union {int num; char *id;}
-%token ENTRADA SAIDA FIM ENQUANTO FACA INC ZERA
-%token <id> ID
-%type <id> cmd cmds varlist
+%union {char *id;}
+%token ENTRADA SAIDA FIM ENQUANTO FACA INC DEC ZERA
+%token <id> ID NUM
+%type <id> cmd cmds varlist id
 
 %%
 
@@ -21,10 +21,10 @@ program:
     // writing result code onto output c file
     FILE *out = fopen("out.c", "w");
     if (out == NULL) exit(1); // error opening file
-    char* code = malloc(strlen($2) + strlen($5) + 20);
+    char* code = malloc(strlen($2) + strlen($4) + strlen($5) + 20);
     strcpy(code, "int main() {\n");
-    strcat(code, $2); strcat(code, $5);
-    strcat(code, "\n}");
+    strcat(code, $2); strcat(code, $4); strcat(code, $5);
+    strcat(code, "}");
     fprintf(out, "%s", code);
     fclose(out);
 
@@ -35,16 +35,20 @@ program:
 ;
 
 varlist:
+  varlist id {
+    char* result = malloc(strlen($1) + strlen($2));
+    strcpy(result, $1);
+    strcat(result, $2);
+    $$ = result;
+  }
+  | id {$$ = $1;}
+;
+
+id:
   ID {
     char* result = malloc(strlen($1) + 10);
     strcpy(result, "int ");
     strcat(result, $1); strcat(result, " = 0;\n");
-    $$ = result;
-  }
-  | varlist ID {
-    char* result = malloc(strlen($1) + strlen($2));
-    strcpy(result, $1); strcat(result, "int ");
-    strcat(result, $2); strcat(result, " = 0;\n");
     $$ = result;
   }
 ;
@@ -67,9 +71,17 @@ cmd:
     char* result = malloc(strlen($1) + strlen($3) + 5); strcpy(result, $1);
     strcat(result, " = "); strcat(result, $3); strcat(result, ";\n"); $$ = result;
   }
+  | ID '=' NUM {
+    char* result = malloc(strlen($1) + strlen($3) + 5); strcpy(result, $1);
+    strcat(result, " = "); strcat(result, $3); strcat(result, ";\n"); $$ = result;
+  }
   | INC '(' ID ')' {
     char* result = malloc(strlen($3) + 4); strcpy(result, $3);
     strcat(result, "++;\n"); $$ = result;
+  }
+  | DEC '(' ID ')' {
+    char* result = malloc(strlen($3) + 4); strcpy(result, $3);
+    strcat(result, "--;\n"); $$ = result;
   }
   | ZERA '(' ID ')' {
     char* result = malloc(strlen($3) + 6); strcpy(result, $3);
