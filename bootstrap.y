@@ -85,16 +85,16 @@ cmd:
     $$ = result;
   }
   | SE ID ENTAO cmds SENAO cmds FIM {
-  	char* result = malloc(228 + strlen($4) + strlen($6));
+  	char* result = malloc(168 + strlen($4) + strlen($6));
     strcpy(result, "__INT_VAR_A = ");
     strcat(result, $2);
+    strcat(result, "\nZERA(__INT_VAR_B)\nINC(__INT_VAR_B)\n");
     strcat(result, "\nENQUANTO __INT_VAR_A FACA\n");
     strcat(result, $4);
-    strcat(result, "ZERA(__INT_VAR_A)\nFIM\nZERA(__INT_VAR_B)\nINC(__INT_VAR_B)\n__INT_VAR_A = ");
-    strcat(result, $2);
-    strcat(result, "\nENQUANTO __INT_VAR_A FACA\nZERA(__INT_VAR_B)\nZERA(__INT_VAR_A)\nFIM\nENQUANTO __INT_VAR_B FACA\n");
+    strcat(result, "ZERA(__INT_VAR_A)\nZERA(__INT_VAR_B)\nFIM\n");
+    strcat(result, "\nENQUANTO __INT_VAR_B FACA\n");
     strcat(result, $6);
-    strcat(result, "ZERA(__INT_VAR_B)\nFIM\n");
+    strcat(result, "\nZERA(__INT_VAR_B)\nFIM\n");
     $$ = result;
   }
   | FACA ID VEZES cmds FIM{
