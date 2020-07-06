@@ -51,7 +51,7 @@ varlist:
 saida:
   SAIDA {
     char* result = malloc(strlen($1) + 4);
-    strcpy(result, "I J ");
+    strcpy(result, "__INT_VAR_1 __INT_VAR_2 ");
     strcat(result, $1);
     $$ = result;
   }
@@ -77,33 +77,33 @@ cmd:
   }
   | SE ID ENTAO cmds FIM {
   	char* result = malloc(34 + strlen($4));
-    strcpy(result, "I = ");
+    strcpy(result, "__INT_VAR_1 = ");
     strcat(result, $2);
-    strcat(result, "\nENQUANTO I FACA\n");
+    strcat(result, "\nENQUANTO __INT_VAR_1 FACA\n");
     strcat(result, $4);
-    strcat(result, "ZERA(I)\nFIM\n");
+    strcat(result, "ZERA(__INT_VAR_1)\nFIM\n");
     $$ = result;
   }
   | SE ID ENTAO cmds SENAO cmds FIM {
   	char* result = malloc(115 + strlen($4) + strlen($6));
-    strcpy(result, "I = ");
+    strcpy(result, "__INT_VAR_1 = ");
     strcat(result, $2);
-    strcat(result, "\nENQUANTO I FACA\n");
+    strcat(result, "\nENQUANTO __INT_VAR_1 FACA\n");
     strcat(result, $4);
-    strcat(result, "ZERA(I)\nFIM\nZERA(J)\nINC(J)\nI = ");
+    strcat(result, "ZERA(__INT_VAR_1)\nFIM\nZERA(__INT_VAR_2)\nINC(__INT_VAR_2)\n__INT_VAR_1 = ");
     strcat(result, $2);
-    strcat(result, "\nENQUANTO I FACA\nZERA(J)\nZERA(I)\nFIM\nENQUANTO J FACA\n");
+    strcat(result, "\nENQUANTO __INT_VAR_1 FACA\nZERA(__INT_VAR_2)\nZERA(__INT_VAR_1)\nFIM\nENQUANTO __INT_VAR_2 FACA\n");
     strcat(result, $6);
-    strcat(result, "ZERA(J)\nFIM\n");
+    strcat(result, "ZERA(__INT_VAR_2)\nFIM\n");
     $$ = result;
   }
   | FACA ID VEZES cmds FIM{
     char* result = malloc(33 + strlen($4));
-    strcpy(result, "I = ");
+    strcpy(result, "__INT_VAR_1 = ");
     strcat(result, $2);
-    strcat(result, "\nENQUANTO I FACA\n");
+    strcat(result, "\nENQUANTO __INT_VAR_1 FACA\n");
     strcat(result, $4);
-    strcat(result, "DEC(I)\n");
+    strcat(result, "DEC(__INT_VAR_1)\n");
     strcat(result, "FIM\n");
 	  $$ = result;
   }
