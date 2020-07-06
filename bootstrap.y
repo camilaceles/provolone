@@ -21,7 +21,7 @@ program:
     // writing result code onto output c file
     FILE *out = fopen("intermediario.in", "w");
     if (out == NULL) exit(1); // error opening file
-    char* code = malloc(strlen($1) + strlen($2) +strlen($3) +strlen($4) + strlen($5) + strlen($6) + 4);
+    char* code = malloc(strlen($1) + strlen($2) +strlen($3) +strlen($4) + strlen($5) + strlen($6) + 5);
     strcpy(code, $1); strcat(code, " ");
     strcat(code, $2); strcat(code, " ");
     strcat(code, $3); strcat(code, " ");
@@ -50,8 +50,8 @@ varlist:
 
 saida:
   SAIDA {
-    char* result = malloc(strlen($1) + 4);
-    strcpy(result, "__INT_VAR_1 __INT_VAR_2 ");
+    char* result = malloc(strlen($1) + 25);
+    strcpy(result, "__INT_VAR_A __INT_VAR_B ");
     strcat(result, $1);
     $$ = result;
   }
@@ -67,7 +67,7 @@ cmds:
 
 cmd:
   ENQUANTO ID FACA cmds FIM {
-    char* result = malloc(strlen($1) + strlen($2) + strlen($3) + strlen($4) + strlen($5) + 4);
+    char* result = malloc(strlen($1) + strlen($2) + strlen($3) + strlen($4) + strlen($5) + 5);
 	  strcpy(result, $1); strcat(result, " ");
     strcat(result, $2); strcat(result, " ");
     strcat(result, $3); strcat(result, "\n");
@@ -76,34 +76,34 @@ cmd:
     $$ = result;
   }
   | SE ID ENTAO cmds FIM {
-  	char* result = malloc(34 + strlen($4));
-    strcpy(result, "__INT_VAR_1 = ");
+  	char* result = malloc(64 + strlen($4));
+    strcpy(result, "__INT_VAR_A = ");
     strcat(result, $2);
-    strcat(result, "\nENQUANTO __INT_VAR_1 FACA\n");
+    strcat(result, "\nENQUANTO __INT_VAR_A FACA\n");
     strcat(result, $4);
-    strcat(result, "ZERA(__INT_VAR_1)\nFIM\n");
+    strcat(result, "ZERA(__INT_VAR_A)\nFIM\n");
     $$ = result;
   }
   | SE ID ENTAO cmds SENAO cmds FIM {
-  	char* result = malloc(115 + strlen($4) + strlen($6));
-    strcpy(result, "__INT_VAR_1 = ");
+  	char* result = malloc(228 + strlen($4) + strlen($6));
+    strcpy(result, "__INT_VAR_A = ");
     strcat(result, $2);
-    strcat(result, "\nENQUANTO __INT_VAR_1 FACA\n");
+    strcat(result, "\nENQUANTO __INT_VAR_A FACA\n");
     strcat(result, $4);
-    strcat(result, "ZERA(__INT_VAR_1)\nFIM\nZERA(__INT_VAR_2)\nINC(__INT_VAR_2)\n__INT_VAR_1 = ");
+    strcat(result, "ZERA(__INT_VAR_A)\nFIM\nZERA(__INT_VAR_B)\nINC(__INT_VAR_B)\n__INT_VAR_A = ");
     strcat(result, $2);
-    strcat(result, "\nENQUANTO __INT_VAR_1 FACA\nZERA(__INT_VAR_2)\nZERA(__INT_VAR_1)\nFIM\nENQUANTO __INT_VAR_2 FACA\n");
+    strcat(result, "\nENQUANTO __INT_VAR_A FACA\nZERA(__INT_VAR_B)\nZERA(__INT_VAR_A)\nFIM\nENQUANTO __INT_VAR_B FACA\n");
     strcat(result, $6);
-    strcat(result, "ZERA(__INT_VAR_2)\nFIM\n");
+    strcat(result, "ZERA(__INT_VAR_B)\nFIM\n");
     $$ = result;
   }
   | FACA ID VEZES cmds FIM{
-    char* result = malloc(33 + strlen($4));
-    strcpy(result, "__INT_VAR_1 = ");
+    char* result = malloc(63 + strlen($4));
+    strcpy(result, "__INT_VAR_A = ");
     strcat(result, $2);
-    strcat(result, "\nENQUANTO __INT_VAR_1 FACA\n");
+    strcat(result, "\nENQUANTO __INT_VAR_A FACA\n");
     strcat(result, $4);
-    strcat(result, "DEC(__INT_VAR_1)\n");
+    strcat(result, "DEC(__INT_VAR_A)\n");
     strcat(result, "FIM\n");
 	  $$ = result;
   }
