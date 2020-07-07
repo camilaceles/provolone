@@ -39,7 +39,7 @@ program:
 
 varlist:
   varlist ID {
-    char* result = malloc(strlen($1) + strlen($2));
+    char* result = malloc(strlen($1) + strlen($2) + 2);
     strcpy(result, $1);
     strcat(result, " ");
     strcat(result, $2);
@@ -108,27 +108,27 @@ cmd:
 	  $$ = result;
   }
   | ID '=' ID {
-    char* result = malloc(strlen($1) + strlen($3) + 4); strcpy(result, $1);
+    char* result = malloc(strlen($1) + strlen($3) + 5); strcpy(result, $1);
     strcat(result, " = "); strcat(result, $3); strcat(result, "\n"); 
     $$ = result;
   }
   | ID '=' NUM {
-    char* result = malloc(strlen($1) + strlen($3) + 4); strcpy(result, $1);
+    char* result = malloc(strlen($1) + strlen($3) + 5); strcpy(result, $1);
     strcat(result, " = "); strcat(result, $3); strcat(result, "\n"); 
     $$ = result;
   }
   | DEC '(' ID ')' {
-    char* result = malloc(strlen($1) + strlen($3) + 3); strcpy(result, $1); strcat(result, "(");
+    char* result = malloc(strlen($1) + strlen($3) + 4); strcpy(result, $1); strcat(result, "(");
     strcat(result, $3); strcat(result, ")\n"); 
     $$ = result;
   }
   | INC '(' ID ')' {
-    char* result = malloc(strlen($1) + strlen($3) + 3); strcpy(result, $1); strcat(result, "(");
+    char* result = malloc(strlen($1) + strlen($3) + 4); strcpy(result, $1); strcat(result, "(");
     strcat(result, $3); strcat(result, ")\n"); 
     $$ = result;
   }
   | ZERA '(' ID ')' {
-    char* result = malloc(strlen($1) + strlen($3) + 3); strcpy(result, $1); strcat(result, "(");
+    char* result = malloc(strlen($1) + strlen($3) + 4); strcpy(result, $1); strcat(result, "(");
     strcat(result, $3); strcat(result, ")\n"); 
     $$ = result;
   }

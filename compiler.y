@@ -21,7 +21,7 @@ program:
     // writing result code onto output c file
     FILE *out = fopen("out.c", "w");
     if (out == NULL) exit(1); // error opening file
-    char* code = malloc(strlen($2) + strlen($4) + strlen($5) + 20);
+    char* code = malloc(strlen($2) + strlen($4) + strlen($5) + 15);
     strcpy(code, "int main() {\n");
     strcat(code, $2); strcat(code, $4); strcat(code, $5);
     strcat(code, "}");
@@ -36,7 +36,7 @@ program:
 
 varlist:
   varlist id {
-    char* result = malloc(strlen($1) + strlen($2));
+    char* result = malloc(strlen($1) + strlen($2) + 1);
     strcpy(result, $1);
     strcat(result, $2);
     $$ = result;
@@ -46,7 +46,7 @@ varlist:
 
 id:
   ID {
-    char* result = malloc(strlen($1) + 10);
+    char* result = malloc(strlen($1) + 11);
     strcpy(result, "int ");
     strcat(result, $1); strcat(result, " = 0;\n");
     $$ = result;
@@ -55,7 +55,7 @@ id:
 
 cmds:
   cmd cmds {
-    char* result = malloc(strlen($1) + strlen($2));
+    char* result = malloc(strlen($1) + strlen($2) + 1);
     strcpy(result, $1); strcat(result, $2); $$ = result;
   }
   | cmd {$$ = $1;}
@@ -63,28 +63,28 @@ cmds:
 
 cmd:
   ENQUANTO ID FACA cmds FIM {
-    char* result = malloc(11 + strlen($2) + strlen($4)); strcpy(result, "while(");
+    char* result = malloc(strlen($2) + strlen($4) + 12); strcpy(result, "while(");
     strcat(result, $2); strcat(result, "){\n"); strcat(result, $4); strcat(result, "}\n");
     $$ = result;
   }
   | ID '=' ID {
-    char* result = malloc(strlen($1) + strlen($3) + 5); strcpy(result, $1);
+    char* result = malloc(strlen($1) + strlen($3) + 6); strcpy(result, $1);
     strcat(result, " = "); strcat(result, $3); strcat(result, ";\n"); $$ = result;
   }
   | ID '=' NUM {
-    char* result = malloc(strlen($1) + strlen($3) + 5); strcpy(result, $1);
+    char* result = malloc(strlen($1) + strlen($3) + 6); strcpy(result, $1);
     strcat(result, " = "); strcat(result, $3); strcat(result, ";\n"); $$ = result;
   }
   | INC '(' ID ')' {
-    char* result = malloc(strlen($3) + 4); strcpy(result, $3);
+    char* result = malloc(strlen($3) + 5); strcpy(result, $3);
     strcat(result, "++;\n"); $$ = result;
   }
   | DEC '(' ID ')' {
-    char* result = malloc(strlen($3) + 4); strcpy(result, $3);
+    char* result = malloc(strlen($3) + 5); strcpy(result, $3);
     strcat(result, "--;\n"); $$ = result;
   }
   | ZERA '(' ID ')' {
-    char* result = malloc(strlen($3) + 6); strcpy(result, $3);
+    char* result = malloc(strlen($3) + 7); strcpy(result, $3);
     strcat(result, " = 0;\n"); $$ = result;
   }
 ;
