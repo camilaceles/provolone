@@ -6,7 +6,7 @@
   int line_n = 1;
 %}
 
-var         ([_a-zA-Z]+)
+var         ([_a-zA-Z][_a-zA-Z0-9]*)
 number      ([0-9]+)
 
 %%

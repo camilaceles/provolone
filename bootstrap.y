@@ -33,12 +33,13 @@ program:
     strcpy(code, $1); strcat(code, " ");
     strcat(code, $2); strcat(code, " ");
 
-    while(n--) {
+    while(n) {
       sprintf(buffer, "%d", n);
       strcpy(aux_var, "__INT_VAR_");
       strcat(aux_var, buffer);
       strcat(code, aux_var);
       strcat(code, " ");
+	  n--;
     }
 
     strcat(code, $3); strcat(code, " ");
