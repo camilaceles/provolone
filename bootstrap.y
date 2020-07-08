@@ -7,23 +7,40 @@
   void yyerror();
   extern int line_n;
   extern FILE *yyin;
+
+  char buffer[3]; // n <= 99
+  char b_buffer[3];
+  int n = 0; // counter for auxiliar variables
 %}
 
 %union {int num; char *id;}
 %token <id> ENTRADA SAIDA FIM ENQUANTO FACA INC ZERA SE ENTAO SENAO DEC VEZES
 %token <id> ID NUM
-%type <id> cmd cmds varlist saida
+%type <id> cmd cmds varlist
 
 %%
 
 program:
-  ENTRADA varlist saida varlist cmds FIM {
+  ENTRADA varlist SAIDA varlist cmds FIM {
     // writing result code onto output c file
     FILE *out = fopen("intermediario.in", "w");
     if (out == NULL) exit(1); // error opening file
+
+    char aux_var[12];
     char* code = malloc(strlen($1) + strlen($2) +strlen($3) +strlen($4) + strlen($5) + strlen($6) + 5);
+    int length = 13 * n;
+    code = realloc(code, strlen($1) + strlen($2) +strlen($3) +strlen($4) + strlen($5) + strlen($6) + 5 + length);
     strcpy(code, $1); strcat(code, " ");
     strcat(code, $2); strcat(code, " ");
+
+    while(n--) {
+      sprintf(buffer, "%d", n);
+      strcpy(aux_var, "__INT_VAR_");
+      strcat(aux_var, buffer);
+      strcat(code, aux_var);
+      strcat(code, " ");
+    }
+
     strcat(code, $3); strcat(code, " ");
     strcat(code, $4); strcat(code, "\n");
     strcat(code, $5);
@@ -48,15 +65,6 @@ varlist:
   | ID {$$ = $1;}
 ;
 
-saida:
-  SAIDA {
-    char* result = malloc(strlen($1) + 25);
-    strcpy(result, "__INT_VAR_A __INT_VAR_B ");
-    strcat(result, $1);
-    $$ = result;
-  }
-;
-
 cmds:
   cmd cmds {
     char* result = malloc(strlen($1) + strlen($2) + 1);
@@ -68,7 +76,7 @@ cmds:
 cmd:
   ENQUANTO ID FACA cmds FIM {
     char* result = malloc(strlen($1) + strlen($2) + strlen($3) + strlen($4) + strlen($5) + 5);
-	  strcpy(result, $1); strcat(result, " ");
+    strcpy(result, $1); strcat(result, " ");
     strcat(result, $2); strcat(result, " ");
     strcat(result, $3); strcat(result, "\n");
     strcat(result, $4);
@@ -76,36 +84,70 @@ cmd:
     $$ = result;
   }
   | SE ID ENTAO cmds FIM {
-  	char* result = malloc(64 + strlen($4));
-    strcpy(result, "__INT_VAR_A = ");
+    char* result = malloc(65 + strlen($4));
+    n++;
+    sprintf(buffer, "%d", n);
+    strcpy(result, "__INT_VAR_");
+    strcat(result, buffer);
+    strcat(result, " = ");
     strcat(result, $2);
-    strcat(result, "\nENQUANTO __INT_VAR_A FACA\n");
+    strcat(result, "\nENQUANTO __INT_VAR_");
+    strcat(result, buffer);
+    strcat(result, " FACA\n");
     strcat(result, $4);
-    strcat(result, "ZERA(__INT_VAR_A)\nFIM\n");
+    strcat(result, "ZERA(__INT_VAR_");
+    strcat(result, buffer);
+    strcat(result, ")\nFIM\n");
     $$ = result;
   }
   | SE ID ENTAO cmds SENAO cmds FIM {
-  	char* result = malloc(168 + strlen($4) + strlen($6));
-    strcpy(result, "__INT_VAR_A = ");
+    char* result = malloc(170 + strlen($4) + strlen($6));
+    n++; sprintf(buffer, "%d", n);
+    n++; sprintf(b_buffer, "%d", n);
+    strcpy(result, "__INT_VAR_");
+    strcat(result, buffer);
+    strcat(result, " = ");
     strcat(result, $2);
-    strcat(result, "\nZERA(__INT_VAR_B)\nINC(__INT_VAR_B)\n");
-    strcat(result, "\nENQUANTO __INT_VAR_A FACA\n");
+    strcat(result, "\nZERA(__INT_VAR_");
+    strcat(result, b_buffer);
+    strcat(result, ")\nINC(__INT_VAR_");
+    strcat(result, b_buffer);
+    strcat(result, ")\n");
+    strcat(result, "ENQUANTO __INT_VAR_");
+    strcat(result, buffer);
+    strcat(result, " FACA\n");
     strcat(result, $4);
-    strcat(result, "ZERA(__INT_VAR_A)\nZERA(__INT_VAR_B)\nFIM\n");
-    strcat(result, "\nENQUANTO __INT_VAR_B FACA\n");
+    strcat(result, "ZERA(__INT_VAR_");
+    strcat(result, buffer);
+    strcat(result, ")\nZERA(__INT_VAR_");
+    strcat(result, b_buffer);
+    strcat(result, ")\nFIM\n");
+    strcat(result, "ENQUANTO __INT_VAR_");
+    strcat(result, b_buffer);
+    strcat(result, " FACA\n");
     strcat(result, $6);
-    strcat(result, "\nZERA(__INT_VAR_B)\nFIM\n");
+    strcat(result, "ZERA(__INT_VAR_");
+    strcat(result, b_buffer);
+    strcat(result, ")\nFIM\n");
     $$ = result;
   }
   | FACA ID VEZES cmds FIM{
-    char* result = malloc(63 + strlen($4));
-    strcpy(result, "__INT_VAR_A = ");
+    char* result = malloc(64 + strlen($4));
+    n++;
+    sprintf(buffer, "%d", n);
+    strcpy(result, "__INT_VAR_");
+    strcat(result, buffer);
+    strcat(result, " = ");
     strcat(result, $2);
-    strcat(result, "\nENQUANTO __INT_VAR_A FACA\n");
+    strcat(result, "\nENQUANTO __INT_VAR_");
+    strcat(result, buffer);
+    strcat(result, " FACA\n");
     strcat(result, $4);
-    strcat(result, "DEC(__INT_VAR_A)\n");
+    strcat(result, "DEC(__INT_VAR_");
+    strcat(result, buffer);
+    strcat(result, ")\n");
     strcat(result, "FIM\n");
-	  $$ = result;
+    $$ = result;
   }
   | ID '=' ID {
     char* result = malloc(strlen($1) + strlen($3) + 5); strcpy(result, $1);
